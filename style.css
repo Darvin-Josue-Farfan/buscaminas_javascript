@@ -1,0 +1,60 @@
+#table{
+    width: auto;
+    padding: 0px;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin: auto;
+}
+
+#table td{
+    height: 32px;
+    width: 32px;
+    min-height: 32px;
+    min-width: 32px;
+    padding: 0px;
+    empty-cells: show;
+    image-rendering: pixelated;
+    text-align: center;
+}
+#table td b{
+    font-size: 20px;
+    font-family: cursive;
+}
+
+#table td:hover{
+    outline: 3px solid rgb(232, 31, 4);
+    outline-offset: -3px;
+    cursor: pointer;
+    transition-property: outline;
+    transition-duration: 0.07s;
+}
+
+.empty{
+    background: url("./assets/sprites.png") 0px 0px;
+    background-repeat: no-repeat;
+    background-size: 160px 32px;
+}
+
+.hide{
+    background: url("./assets/sprites.png") -32px 0px;
+    background-repeat: no-repeat;
+    background-size: 160px 32px;
+}
+
+.mine{
+    background: url("./assets/sprites.png") -64px 0px;
+    background-repeat: no-repeat;
+    background-size: 160px 32px;
+}
+
+.flag{
+    background: url("./assets/sprites.png") -96px 0px;
+    background-repeat: no-repeat;
+    background-size: 160px 32px;
+}
+
+.mine_fail{
+    background: url("./assets/sprites.png") -128px 0px;
+    background-repeat: no-repeat;
+    background-size: 160px 32px;
+}
