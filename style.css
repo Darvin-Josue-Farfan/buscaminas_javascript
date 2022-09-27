@@ -1,10 +1,60 @@
+body{
+    background: url("./assets/background.png") rgba(0, 0, 0, 0.5);
+    text-align:center;
+}
+
+.background{
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(30, 62, 101, 0.881);
+    z-index: -1;
+}
+
+.container{
+    position: absolute;
+    min-width: 92vw;
+    min-height: 92vh;
+    margin-top: 4vh;
+    margin-left: 4vw;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 3%;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+}
+
+#header_table{
+    width: 400px;
+    margin: 0 auto;
+}
+
+#header_table tr:first-child td:first-child{
+    width: 120px;
+}
+
+.text_header{
+    font-size: 24px;
+}
+
+.dificultad{
+    cursor: pointer;
+    color:#6c757d
+}
 #table{
     width: auto;
     padding: 0px;
     border-collapse: collapse;
     table-layout: fixed;
-    margin: auto;
+    margin: 0 auto;
 }
+
+#table tr:last-child td:first-child { border-bottom-left-radius: 3px; }
+#table tr:last-child td:last-child { border-bottom-right-radius: 3px; }
+#table tr:first-child td:first-child { border-top-left-radius: 3px; }
+#table tr:first-child td:last-child { border-top-right-radius: 3px; }
 
 #table td{
     height: 32px;
@@ -16,17 +66,24 @@
     image-rendering: pixelated;
     text-align: center;
 }
+
 #table td b{
     font-size: 20px;
     font-family: cursive;
 }
 
 #table td:hover{
-    outline: 3px solid rgb(232, 31, 4);
+    outline: 4px solid rgb(232, 31, 4);
     outline-offset: -3px;
     cursor: pointer;
     transition-property: outline;
     transition-duration: 0.07s;
+}
+
+#content_table{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
 .empty{
@@ -57,4 +114,9 @@
     background: url("./assets/sprites.png") -128px 0px;
     background-repeat: no-repeat;
     background-size: 160px 32px;
+}
+
+footer {
+    position:fixed;
+    bottom: 4.3vh;
 }

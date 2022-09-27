@@ -3,12 +3,15 @@ $(function(){
     let tablero = "";
     let mines_location = [];
     let GameOver = false;
-
-    let row;
-    let col;
-    let mines;
-
+    
+    let row = 8;
+    let col = 10;
+    let mines = 10;
+    let time = 0;
+    let running = false;
     let reveladas = 0;
+
+    let aux_load_level = false;
 
     let sounds = {
         "select": "./assets/select.wav",
@@ -21,52 +24,83 @@ $(function(){
         sounds[key] = new Audio(url);
     }
 
-    $("#select_level").on("change", function(){
+    let dificultad_anterior =  $(".dificultad").first();
 
-        let value = $(this).val();
+    $(".dificultad").on("click", function(){
 
-        $("#colum,#row,#minas").prop("disabled", true);
+        if( running ) return;
 
-        switch(value){
+        let current = $(this);
+        let color = $(this).data("color");
 
-            case "PRINCIPIANTE": 
-                $("#colum").val(8);
-                $("#row").val(8);
-                $("#minas").val(10);
+        if( $(current).is(dificultad_anterior) )return;
+
+        if( dificultad_anterior !== false )
+            $(dificultad_anterior).css("color", "#6c757d");
+
+        $(current).removeClass("text-muted").css({color});
+
+        $("#time").html("00:00");
+        $("#flag").html("000");
+
+        switch(color){
+
+            case "#0dcaf0":
+                $("#display_dificultad").html(`<span style='color:${color}'>Fácil</span>`);
+                row = 8;
+                col = 10;
+                mines = "010";
             break;
 
-            case "INTERMEDIO": 
-                $("#colum").val(16);
-                $("#row").val(16);
-                $("#minas").val(40);
+            case "#0d6efd":
+                $("#display_dificultad").html(`<span style='color:${color}'>Intermedio</span>`);
+                row = 14;
+                col = 18;
+                mines = "040";
             break;
 
-            case "EXPERTO": 
-                $("#colum").val(30);
-                $("#row").val(16);
-                $("#minas").val(99);
+            case "#dc3545": $("#display_dificultad").html(`<span style='color:${color}'>Experto</span>`);
+                row = 20;
+                col = 24;
+                mines = "099";
             break;
 
-            default:
-                $("#colum,#row,#minas").prop("disabled", false);
+            case "#cc08b2":
+                $("#display_dificultad").html(`<span style='color:${color}'>Locura</span>`);
+                row = 20;
+                col = 26;
+                mines = "150";
             break;
-
         }
 
+        $("#mines").html(mines);
+
+        dificultad_anterior = current;
+        cargarTable();
     });
 
-
+    cargarTable();
+    
     $("#start").on("click", function(){
 
-        row = $("#row").val();
-        col = $("#colum").val();
-        mines = $("#minas").val();
+        //if( !aux_load_level )
+            cargarTable();
+
+        $("#start").html("Reiniciar");
+
         GameOver = false;
         reveladas = 0;
+        running = true;
+        $("#time").html("<span class='text-info'>00:00</span>");
+        displayMinesAndFlag();
+        displayTime();
+    });
 
-        $("#mensaje").empty();
+    function cargarTable(){
 
         let $table = $("#table");
+      
+        $("#mensaje").empty();
 
         $table.empty();
 
@@ -80,8 +114,8 @@ $(function(){
         }
 
         generateRamdonTablero(row, col, mines);
-
-    });
+        aux_load_level = true;
+    }
 
     function generateRamdonTablero(row, col, mines){
 
@@ -138,22 +172,68 @@ $(function(){
         }
       
     }
-
     
-    function revelarTablero(flagByMine){
+    function revelarTablero(refFail){
 
-        let auxClass = flagByMine ? "flag" : "mine";
+        if( refFail ){
 
-        for(let j in tablero)
-            for(let i in tablero[j]){
-                
-                if( tablero[j][i] == '*' ){
-                    $(`#table tr:eq(${j}) td:eq(${i})`).removeClass("hide").addClass(auxClass);
+            for(let j in tablero)
+                for(let i in tablero[j]){
                     
-                }else if( tablero[j][i] )
-                    $(`#table tr:eq(${j}) td:eq(${i})`).removeClass("hide").removeClass("flag").addClass("empty")
-                    .html( getNumber(tablero[j][i]) )
-            }
+                    let td = $(`#table tr:eq(${j}) td:eq(${i})`);
+                    if( $(td).data("evaluate") ) continue;
+                    if( $(td).hasClass("flag") && tablero[j][i] == '*' ) continue;
+
+                    if( tablero[j][i] != '*' ){
+                        $(td).css({"outline": "3px solid #0D6EFD"}).animate({
+                            outlineWidth:  "14px",
+                            outlineOffset: "-18px",
+                        
+                        }, 200, function(){
+                            $(td).removeClass("hide").removeClass("flag")
+                            .addClass("empty").html( getNumber(tablero[j][i]) )
+                        
+                        }).animate({ outlineWidth:  "0px", outlineOffset: "0px", }, 750);
+                        continue;
+                    }
+
+                    $(td).removeClass("hide").addClass("mine");
+                    $(td).css({"outline": "3px solid #FF7C00"}).animate({
+                        outlineWidth:  "14px",
+                        outlineOffset: "-18px",
+                    }, 1000, function(){
+                        
+                    });
+                    
+                }
+
+                $(refFail).removeClass("mine").addClass("mine_fail");
+                $(refFail).css({ "outline":  "0px" });
+
+        }else{
+
+            for(let j in tablero)
+                for(let i in tablero[j]){
+                    
+                    let td = $(`#table tr:eq(${j}) td:eq(${i})`);
+                   
+                    if( tablero[j][i] == '*' ){
+                        $(td).removeClass("hide").addClass("flag");
+                        
+                    }else if( tablero[j][i] ){
+
+                        $(td).css({"outline": "3px solid rgb(25,40,59)"}).animate({ //#2893E9
+                            outlineWidth:  "14px",
+                            outlineOffset: "-18px",
+                        });
+
+                    }
+
+                }
+
+        }
+
+        
     }
 
     function getNumber(number){
@@ -175,23 +255,27 @@ $(function(){
 
     $("#table").on("click", "td", function(e){
 
+        if( !running ) return;
         if( GameOver ) return;
 
         [x, y] = [ $(this).index(), $(this).parent().index() ];
 
+        if( $(this).data("evaluate") ) return;
+
         if( $(this).hasClass("flag") ){
             $(this).removeClass("flag").addClass("hide");
-            $("#mensaje").html(`<h3 class='text-primary'>Minas restantes: <span class="text-secondary">${ mines - $("#table > tr > td.flag").length }</span></h3>`);
+            displayMinesAndFlag();
             sounds["flag"].play();
             return;
         }
 
         if( tablero[y][x] == '*' ){
+            $("#start").html("Iniciar");
             GameOver = true;
+            running = false;
             sounds["explosion"].play();
-            revelarTablero(false);
-            $("#mensaje").html("<h4 class='text-danger'><i class='fa-solid fa-face-frown'></i> ¡Has perdido!</h4>");
-            $(`#table tr:eq(${y}) td:eq(${x})`).removeClass("mine").addClass("mine_fail");
+            revelarTablero( $(this) );
+            aux_load_level = false;
             return;
         }
 
@@ -200,25 +284,33 @@ $(function(){
         if( evaluate !== false )
             sounds["select"].play();
 
-        if( 
-            ( reveladas + $("#table > tr > td.flag").length + $("#table > tr > td.hide").length ) == (row * col) &&
-            ( $("#table > tr > td.flag").length + $("#table > tr > td.hide").length == mines  )
-        ){
-            revelarTablero(true);
-            $("#mensaje").html("<h3 class='text-success'><i class='fa-solid fa-face-smile'></i> ¡Felicidades! Has superado el reto</h3>");
+        //comprobar si ha ganado
+
+        let total_tablero = row * col;
+        let total_flags = $("#table > tr > td.flag").length;
+        let cubiertas = $("#table > tr > td.hide").length;
+
+        if( (total_flags + cubiertas == mines ) && (total_flags + cubiertas + reveladas == total_tablero) ){
+            revelarTablero();
+            $("#start").html("Iniciar");
             GameOver = true;
-        
-        }else
-            $("#mensaje").html(`<h3 class='text-primary'>Minas restantes: <span class="text-secondary">${ mines - $("#table > tr > td.flag").length }</span></h3>`);
-        
+            running = false;
+            aux_load_level = false;
+        }
+
+        displayMinesAndFlag();
 
     });
 
     document.oncontextmenu = rightClick;
-  
+    document.onselectstart = function(){ return false; } 
+    //document.onmousedown = function() { return false; }
+    
     function rightClick(e) {
 
         e.preventDefault();
+
+        if( !running ) return;
 
         if( GameOver ) return;
 
@@ -229,7 +321,7 @@ $(function(){
 
         if( $(element).hasClass("hide") ){
             $(element).removeClass("hide").addClass("flag");
-            $("#mensaje").html(`<h3 class='text-primary'>Minas restantes: <span class="text-secondary">${ mines - $("#table > tr > td.flag").length }</span></h3>`);
+            displayMinesAndFlag();
             sounds["flag"].play();
 
         }else if( $(element).hasClass("flag") ){
@@ -250,12 +342,25 @@ $(function(){
 
         $(td).data("evaluate", 1);
 
-        if( tablero[obj.y][obj.x] == '*' ) return;
+        let character = tablero[obj.y][obj.x];
 
-        displayObjet({x: obj.x, y: obj.y, character: tablero[obj.y][obj.x] });
+        if( character == '*' ) return;
+
+        displayObjectOnyClass(td);
+
+        $(td).css({"outline": "3px solid #0d6efd"}).animate({
+            outlineWidth:  "14px",
+            outlineOffset: "-18px",
+        }, 200, function(){
+            displayObjectOnyCharacter(this, character);
+        }).animate({
+            outlineWidth:  "0px",
+            outlineOffset: "0px",
+        }, 350);
+        
         reveladas++;
 
-        if( tablero[obj.y][obj.x] != '0' ) return; 
+        if( character != '0' ) return; 
 
         [i, j] = [obj.x, obj.y];
 
@@ -274,8 +379,54 @@ $(function(){
             recursiveDisplay({ ...around[n], row: obj.row , col: obj.col });
     }
 
-    function displayObjet(obj){
-        $(`#table tr:eq(${obj.y}) td:eq(${obj.x})`).removeClass("hide").addClass("empty").html( getNumber(obj.character) );
+    function displayObjet(nodeElem, character){
+        $(nodeElem).removeClass("hide").addClass("empty").html( getNumber(obj.character) );
+    }
+
+    function displayObjectOnyClass(nodeElem){
+        $(nodeElem).removeClass("hide").addClass("empty");
+    }
+
+    function displayObjectOnyCharacter(nodeElem, character){
+        $(nodeElem).html( getNumber(character) );
+    }
+
+    function completeNumber(number){
+        if(number < 10 ) return "00" + number;
+        if(number < 100) return "0" + number;
+        return number;
+    }
+
+    function displayMinesAndFlag(){
+        $("#flag").html( "<span class='text-primary' >" + completeNumber( $("#table > tr > td.flag").length) + "</span>" );
+        $("#mines").html( "<span class='text-danger' >" + completeNumber( mines - parseInt($("#flag").text())) + "</span>" );
+    }
+
+    let intervalTime = false;
+    function displayTime(){
+        
+        time = new Date();
+        time = time.getTime();
+
+        intervalTime = setInterval(function(){
+
+            let now = new Date();
+            now = now.getTime();
+            now -= time;
+            
+            if( now < 3600000 )
+                now = new Date(now).toISOString().substring(14, 19);
+            else
+                now = new Date(now).toISOString().substring(11, 16);
+            
+            $("#time").html(`<span class="text-info">${now}</span>`);
+
+            if( GameOver || !running ){
+                time = now;
+                clearInterval(intervalTime);
+            }
+
+        }, 1000);
     }
 
 });

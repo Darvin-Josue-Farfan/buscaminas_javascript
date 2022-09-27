@@ -8,62 +8,68 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=1.3">
 
 </head>
 <body>
 
-    <div class="container p-4">
+    <div class="background"></div>
+
+    <div class="container container-fluid d-flex flex-column">
 
         <div class="row text-center">
 
-            <div class="col-md-2">
-                <b class="text-secondary">Nivel:</b>
-                <select id="select_level" class="form-control">
-                    <option>PRINCIPIANTE</option>
-                    <option>INTERMEDIO</option>
-                    <option>EXPERTO</option>
-                    <!--<option>PERSONALIZADO</option>-->
-                </select>
+            <div class="col-md-12">
+                <h2 class="text-info">BUSCAMINAS</h2>
+                <table id="header_table">
+                    <tr>
+                        <td>
+                            <span id="display_dificultad" style="color:#0dcaf0" >Fácil</span><br/>
+                            <span class="dificultad fa fa-solid fa-face-smile-beam text_header" style="color:#0dcaf0"  data-color="#0dcaf0"></span>
+                            <span class="dificultad fa fa-solid fa-face-meh text_header" data-color="#0d6efd" ></span>
+                            <span class="dificultad fa fa-solid fa-face-angry text_header" data-color="#dc3545" ></span>
+                            <span class="dificultad fa fa-dizzy text_header" data-color="#cc08b2" ></span>
+                        </td>
+                        <td>
+                            <span class="fa fa-clock text-white"></span><br/><span id="time" class="text-white text_header">00:00</span>
+                        </td>
+                        <td>
+                            <span class="fa fa-flag fa-flip-horizontal text-white"></span><br/><span id="flag" class="text-white text_header">000</span>
+                        </td>
+                        <td>
+                            <span class="fa fa-circle text-white"></span><br/><span id="mines" class="text-white text_header">010</span>
+                        </td>
+                        <td>
+                            <span id="start" class="btn btn-info text-white" >Iniciar</span>
+                        </td>
+                    </tr>
+                </table>
             </div>
 
-            <div id="div_row" class="col-md-2">
-                <b class="text-info">Filas:</b>
-                <input id="row" class="form-control" type="number" min="8" value="8" step="1" disabled />
-            </div>
-
-            <div id="div_col" class="col-md-2">
-                <b class="text-info" >Columnas:</b>
-                <input id="colum" class="form-control" type="number" min="8" value="8" step="1" disabled />
-            </div>
-
-            <div id="div_minas" class="col-md-2">
-                <b class="text-danger text-bold" >Minas: </b>
-                <input id="minas" class="form-control" type="number" min="10" value="10" step="1" disabled />
-            </div>
-
-            <div class="col-md-2">
-                <br/>
-                <button id="start" class="btn btn-primary">INICIAR</button>
-            </div>
         </div>
-        <hr/>
-        <div class="row">
-            
-            <table id="table" >
-
-            </table>
+        
+        <div id="content_table" class="row flex-fill">
+            <div class="col d-flex flex-column">
+                <table id="table" ></table>
+            </div>
         </div>
 
         <div id="mensaje" class="row" style="text-align: center;"></div>
 
+        <footer class="text-center text-lg-start">
+            <div class="text-center text-white">
+                By: Darvin Farfan |
+                <a href="https://mdbootstrap.com/">Código Fuente</a>
+            </div>
+        </footer>
+        
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/js/all.min.js" integrity="sha512-naukR7I+Nk6gp7p5TMA4ycgfxaZBJ7MO5iC3Fp6ySQyKFHOGfpkSZkYVWV5R7u7cfAicxanwYQ5D1e17EfJcMA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
 
-    <script src="script.js?v=2.0"></script>
+    <script src="script.js?v=2.5"></script>
 
 </body>
 </html>
